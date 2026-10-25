@@ -1,0 +1,472 @@
+{
+    "geode": "5.11.2",
+    "gd": {
+        "win": "2.2081",
+        "android": "2.2081"
+    },
+    "id": "lyophi.buffermod",
+    "name": "Input Buffer",
+    "version": "v1.2.0",
+    "developer": "Lyophi",
+    "description": "Input assist for Geometry Dash. Early clicks are queued and fired at the first valid moment, with configurable windows (ticks, ms, frames), orb and landing assist, hold duration control, profiles and a debug overlay.",
+    "settings": {
+        "guide": {
+            "type": "title",
+            "name": "How to read the timing numbers",
+            "description": "Timing windows are measured in **ticks**. A tick is one tiny step of the game's physics. There are 240 ticks per second, so:\n\n**1 tick** = about 4 milliseconds\n**2 ticks** = about 8 ms\n**4 ticks** = about 17 ms (1 frame at 60 FPS)\n**8 ticks** = about 33 ms (2 frames)\n**16 ticks** = about 67 ms (4 frames)\n**32 ticks** = about 133 ms (8 frames)\n\nOn every window setting:\n**-1** = use the Main Buffer Window\n**0** = off, raw input with no help\n**1 or more** = your own value\n\nSmaller windows are stricter and feel more natural. Larger windows are more forgiving but can fire clicks earlier or later than you meant."
+        },
+        "stage": {
+            "type": "string",
+            "name": "Main Buffer Window",
+            "description": "The default window for every mode that is set to -1 below.\n\n**2 ticks** = about half a frame (very strict)\n**4 ticks** = about 1 frame (a good starting point)\n**8 ticks** = about 2 frames\n**16 ticks** = about 4 frames (very forgiving)\n**Off** = no default window\n\nA bigger window is more forgiving, but a click meant for later might fire sooner than you wanted.",
+            "default": "4 ticks",
+            "one-of": [
+                "2 ticks",
+                "4 ticks",
+                "8 ticks",
+                "16 ticks",
+                "Off"
+            ]
+        },
+        "sec-ground": {
+            "type": "title",
+            "name": "Landing and orb modes",
+            "description": "Cube, ball, robot and spider.\n\nThese windows set how long before landing or touching an orb a click is still remembered. If you tap a little early and let go, the click fires the moment you touch the ground or orb."
+        },
+        "cube-ticks": {
+            "type": "int",
+            "name": "Cube Window (ticks)",
+            "description": "How early you can click before landing or touching an orb in cube and still have it count.\n\n**-1** = same as Main Buffer Window\n**0** = off\n**1 or more** = your own value\n\nExamples: 4 = about 1 frame early, 8 = about 2 frames early, 16 = about 4 frames early.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "ball-ticks": {
+            "type": "int",
+            "name": "Ball Window (ticks)",
+            "description": "How early you can click before touching a surface or orb in ball and still have it count.\n\n**-1** = same as Main Buffer Window\n**0** = off\n**1 or more** = your own value\n\nExamples: 4 = about 1 frame early, 8 = about 2 frames early, 16 = about 4 frames early.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "robot-ticks": {
+            "type": "int",
+            "name": "Robot Window (ticks)",
+            "description": "How early you can click before landing or touching an orb in robot and still have it count.\n\n**-1** = same as Main Buffer Window\n**0** = off\n**1 or more** = your own value\n\nExamples: 4 = about 1 frame early, 8 = about 2 frames early, 16 = about 4 frames early.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "spider-ticks": {
+            "type": "int",
+            "name": "Spider Window (ticks)",
+            "description": "How early you can click before touching a surface or orb in spider and still have it count.\n\n**-1** = same as Main Buffer Window\n**0** = off\n**1 or more** = your own value\n\nExamples: 4 = about 1 frame early, 8 = about 2 frames early, 16 = about 4 frames early.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "sec-fly": {
+            "type": "title",
+            "name": "Flying modes",
+            "description": "Ship, UFO, swing and wave.\n\nThere is no ground to wait for here, so these windows work differently. In ship, UFO and swing, a very quick tap is made to last at least this long, so fast taps come out the same length every time. In wave, the window is used by the Wave Mode you pick."
+        },
+        "ship-ticks": {
+            "type": "int",
+            "name": "Ship Window (ticks)",
+            "description": "The shortest a tap can be in ship. A quicker tap is stretched to this length.\n\n**-1** = same as Main Buffer Window\n**0** = off, raw input\n**1 or more** = your own value\n\nExamples: 2 = taps last at least about half a frame, 4 = at least about 1 frame.\n\nBigger values can make quick taps feel slower or heavier.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "ufo-ticks": {
+            "type": "int",
+            "name": "UFO Window (ticks)",
+            "description": "The shortest a tap can be in UFO. A quicker tap is stretched to this length.\n\n**-1** = same as Main Buffer Window\n**0** = off, raw input\n**1 or more** = your own value\n\nExamples: 2 = taps last at least about half a frame, 4 = at least about 1 frame.\n\nBigger values can make quick taps feel slower or heavier.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "swing-ticks": {
+            "type": "int",
+            "name": "Swing Window (ticks)",
+            "description": "The shortest a tap can be in swing. A quicker tap is stretched to this length.\n\n**-1** = same as Main Buffer Window\n**0** = off, raw input\n**1 or more** = your own value\n\nExamples: 2 = taps last at least about half a frame, 4 = at least about 1 frame.\n\nBigger values can make quick taps feel slower or heavier.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "wave-ticks": {
+            "type": "int",
+            "name": "Wave Window (ticks)",
+            "description": "How strong the wave timing help is. The meaning depends on the Wave Mode below:\n\n**Min Hold**: the shortest a tap can be\n**Min Gap**: the shortest wait between letting go and pressing again\n**Grid**: the size of the timing grid (every click and release waits for the next grid line)\n\n**-1** = same as Main Buffer Window, but never more than 8 ticks\n**0** = off, raw input\n**1 or more** = your own value (not capped)\n\n2 or 4 is a good place to start. Large values make wave more consistent but much less responsive, and can feel very laggy.",
+            "default": -1,
+            "min": -1,
+            "max": 64,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": false
+            }
+        },
+        "wave-mode": {
+            "type": "string",
+            "name": "Wave Mode",
+            "description": "Picks how the wave timing help works. The Wave Window above sets how strong it is.\n\n**Min Hold**: a very short tap is stretched to at least the window length. Good if your quick taps come out too short or uneven.\nWatch out: quick taps feel slightly longer than you pressed, and fast spam can feel sticky.\n\n**Min Gap**: after you let go, the next press has to wait a minimum time. Good for fast zigzags that bunch up.\nWatch out: a press that comes too soon is delayed, which can feel like a late or skipped click.\n\n**Grid**: every press and release waits for the next beat of a fixed timing grid, so everything lines up evenly. Gives the most consistent result.\nWatch out: adds a small delay to every click and release, up to the window size. It can feel laggy with large windows.\n\nSwitching modes in the middle of a wave section can cause one odd click, so change it while paused.",
+            "default": "Grid",
+            "one-of": [
+                "Min Hold",
+                "Min Gap",
+                "Grid"
+            ]
+        },
+        "sec-window": {
+            "type": "title",
+            "name": "Extended Buffer Window",
+            "description": "Sets the main window in the unit you choose. The per-mode windows above (in ticks) still win when they are 1 or more.\n\nMilliseconds and Frames are converted to physics steps with your Game Speed (TPS). Frames use the real frame time measured in the level."
+        },
+        "window-unit": {
+            "type": "string",
+            "name": "Window Unit",
+            "description": "**Ticks:** the Main Buffer Window list at the top.\n**Milliseconds:** use Window (ms), 0 to 500.\n**Frames:** use Window (frames), 0 to 30, at your real framerate.",
+            "default": "Ticks",
+            "one-of": [
+                "Ticks",
+                "Milliseconds",
+                "Frames"
+            ]
+        },
+        "window-ms": {
+            "type": "int",
+            "name": "Window (ms)",
+            "description": "Main window when the unit is Milliseconds. 0 = off.",
+            "default": 17,
+            "min": 0,
+            "max": 500,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "window-frames": {
+            "type": "int",
+            "name": "Window (frames)",
+            "description": "Main window when the unit is Frames. 0 = off. The length in time depends on your framerate.",
+            "default": 1,
+            "min": 0,
+            "max": 30,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "adapt-fps": {
+            "type": "bool",
+            "name": "Adapt to Framerate",
+            "description": "Never let the main window be shorter than one real frame. Helps on low framerates, where a window shorter than a frame could be missed.",
+            "default": false
+        },
+        "sec-assist": {
+            "type": "title",
+            "name": "Orb and Landing Assist",
+            "description": "Separate windows for clicks meant for an orb and clicks meant for a landing. Only cube, ball, robot and spider use them.\n\n**-1** = same as the mode window\n**0** = off for that kind\n**1 or more** = milliseconds"
+        },
+        "orb-window-ms": {
+            "type": "int",
+            "name": "Orb Window (ms)",
+            "description": "How early a click can be before touching an orb.",
+            "default": -1,
+            "min": -1,
+            "max": 500,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "landing-window-ms": {
+            "type": "int",
+            "name": "Landing Window (ms)",
+            "description": "How early a click can be before landing.",
+            "default": -1,
+            "min": -1,
+            "max": 500,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "sec-queue": {
+            "type": "title",
+            "name": "Input Queue Control",
+            "description": "Early clicks wait in a queue until the first valid moment. An entry that waits longer than the window expires."
+        },
+        "queue-capacity": {
+            "type": "int",
+            "name": "Queue Capacity",
+            "description": "How many early clicks can wait at once.",
+            "default": 2,
+            "min": 1,
+            "max": 8,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "queue-dedupe-ms": {
+            "type": "int",
+            "name": "Duplicate Filter (ms)",
+            "description": "A press closer than this to the previous queued press is ignored as a duplicate (for example a double touch event). 0 = off. Needs Input Guard on.",
+            "default": 8,
+            "min": 0,
+            "max": 50,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "queue-priority": {
+            "type": "string",
+            "name": "Queue Priority",
+            "description": "Which entry fires first, and which one is dropped when the queue is full.\n\n**Oldest first:** fire the oldest, drop the new one when full.\n**Newest first:** fire the newest, drop the oldest when full.",
+            "default": "Oldest first",
+            "one-of": [
+                "Oldest first",
+                "Newest first"
+            ]
+        },
+        "queue-clear-on-fire": {
+            "type": "bool",
+            "name": "Clear Queue After Firing",
+            "description": "After one entry fires, remove the rest. Recommended.",
+            "default": true
+        },
+        "sec-hold": {
+            "type": "title",
+            "name": "Hold Duration Override",
+            "description": "The game only gives the mod press and release calls. It cannot change a finger that is still down, so these settings apply to presses the mod injects and to releases it delays."
+        },
+        "hold-inject-ms": {
+            "type": "int",
+            "name": "Injected Press Length (ms)",
+            "description": "How long a buffered press stays down before it is released. 0 = release on the next physics step. A finger that is still down keeps the button held. With a cube, a long press can make the icon jump again.",
+            "default": 0,
+            "min": 0,
+            "max": 500,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "fly-min-hold-ms": {
+            "type": "int",
+            "name": "Fly Minimum Hold (ms)",
+            "description": "Ship, UFO, swing and wave: a release earlier than this is delayed. 0 = use the mode window.",
+            "default": 0,
+            "min": 0,
+            "max": 500,
+            "control": {
+                "input": true,
+                "arrows": true,
+                "slider": true
+            }
+        },
+        "sec-mobile": {
+            "type": "title",
+            "name": "Mobile Input and Debug"
+        },
+        "input-guard": {
+            "type": "bool",
+            "name": "Input Guard",
+            "description": "Filters duplicate touch events and clears the buffer state when the game is paused, so no press stays stuck after a lost touch-up.",
+            "default": true
+        },
+        "overlay": {
+            "type": "bool",
+            "name": "Debug Overlay",
+            "description": "Shows the queue, windows, framerate, counters and the last executed inputs in the top left corner of a level.",
+            "default": false
+        },
+        "sec-keys": {
+            "type": "title",
+            "platforms": [
+                "win"
+            ],
+            "name": "Hotkeys",
+            "description": "Keys that work while you are in a level. Click a box and press a key, or clear it to turn that hotkey off. If two actions share a key, both will trigger."
+        },
+        "kb-stage": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: Cycle Main Window",
+            "description": "Steps the Main Buffer Window through 2, 4, 8, 16 ticks and Off.",
+            "default": "F6",
+            "category": "gameplay"
+        },
+        "kb-tps-up": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: TPS Up",
+            "description": "Moves the Game Speed (TPS) up to the next common speed (60, 120, 240, 360, 480, 720, 960, 1000). Remember it must match your real TPS.",
+            "default": "F7",
+            "category": "gameplay"
+        },
+        "kb-tps-down": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: TPS Down",
+            "description": "Moves the Game Speed (TPS) down to the previous common speed (60, 120, 240, 360, 480, 720, 960, 1000).",
+            "default": "F8",
+            "category": "gameplay"
+        },
+        "kb-debug": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: Debug Logging",
+            "description": "Turns debug logging on or off.",
+            "default": "F9",
+            "category": "gameplay"
+        },
+        "kb-wave": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: Cycle Wave Mode",
+            "description": "Switches between Min Hold, Min Gap and Grid. Best used while paused.",
+            "default": "F10",
+            "category": "gameplay"
+        },
+        "kb-section": {
+            "type": "keybind",
+            "platforms": [
+                "win"
+            ],
+            "name": "Key: Add Section Here",
+            "description": "Adds a section to the current level at the percent you are at right now (experimental sections). Works in a level, including practice mode.",
+            "default": "F11",
+            "category": "gameplay"
+        },
+        "sec-experimental": {
+            "type": "title",
+            "name": "Experimental",
+            "description": "Features that are still being tested. They are off by default and may not behave perfectly."
+        },
+        "dual-mode": {
+            "type": "bool",
+            "name": "Dual Mode Support (Experimental)",
+            "description": "Turns the buffer on during **dual sections**: when a dual portal gives you a second icon in a normal one-player level.\n\n**Off** (default): dual sections use the normal game input. There is no buffering or timing help while you are dual.\n**On**: each icon is buffered by its own game mode, so a cube and a wave can each follow their own rules.\n\nThis is experimental and can behave unexpectedly, for example a click doing nothing on one icon, or an extra jump. If something feels wrong in a dual section, turn this off.\n\n2-player levels are not affected by this setting.",
+            "default": false
+        },
+        "ship-style": {
+            "type": "string",
+            "name": "Ship Timing Style (Experimental)",
+            "description": "How clicks are handled in ship mode, using the ship window.\n\n**Min Hold** (default): a quick tap is held for at least the window.\n**Min Gap**: clicks keep at least the window between a release and the next press.\n**Grid**: presses and releases snap to a fixed beat. Clicks can be delayed by up to the window, so it can make some timings impossible to hit.\n\nExperimental. Leave on Min Hold unless you are testing.",
+            "default": "Min Hold",
+            "one-of": [
+                "Min Hold",
+                "Min Gap",
+                "Grid"
+            ]
+        },
+        "ufo-style": {
+            "type": "string",
+            "name": "UFO Timing Style (Experimental)",
+            "description": "How clicks are handled in UFO mode, using the UFO window.\n\n**Min Hold** (default): a quick tap is held for at least the window.\n**Min Gap**: clicks keep at least the window between a release and the next press.\n**Grid**: presses and releases snap to a fixed beat. Clicks can be delayed by up to the window, so it can make some timings impossible to hit.\n\nExperimental. Leave on Min Hold unless you are testing.",
+            "default": "Min Hold",
+            "one-of": [
+                "Min Hold",
+                "Min Gap",
+                "Grid"
+            ]
+        },
+        "swing-style": {
+            "type": "string",
+            "name": "Swing Timing Style (Experimental)",
+            "description": "How clicks are handled in swing mode, using the swing window.\n\n**Min Hold** (default): a quick tap is held for at least the window.\n**Min Gap**: clicks keep at least the window between a release and the next press.\n**Grid**: presses and releases snap to a fixed beat. Clicks can be delayed by up to the window, so it can make some timings impossible to hit.\n\nExperimental. Leave on Min Hold unless you are testing.",
+            "default": "Min Hold",
+            "one-of": [
+                "Min Hold",
+                "Min Gap",
+                "Grid"
+            ]
+        },
+        "sections": {
+            "type": "bool",
+            "name": "Level Sections (Experimental)",
+            "description": "Lets a level use different settings between percents you choose (for example 0.00-35.00% one setup, 35.50-60.00% another). Each section has its own start, end and settings. Edit them from the pause menu: **Buffer > Advanced > Sections**.\n\nOff by default. Sections do not work in platformer levels. Switching sections clears held input at the boundary.",
+            "default": false
+        },
+        "sec-general": {
+            "type": "title",
+            "name": "General",
+            "description": "Settings that apply to everything."
+        },
+        "tps-value": {
+            "type": "int",
+            "name": "Game Speed (TPS)",
+            "description": "Type the TPS you set in Mega Hack, or 240 if you have not changed it. Any whole number from 1 to 10000 works, for example 240, 360, 720 or 1000.\n\nThe mod uses this to turn ticks into real time. If it is wrong, every window will be the wrong size: too short if you type less than your real TPS, too long if you type more.\n\nThis does not change your game's speed. It only tells the mod what speed you are running.",
+            "default": 240,
+            "min": 1,
+            "max": 10000,
+            "control": {
+                "input": true,
+                "arrows": false,
+                "slider": false
+            }
+        },
+        "debug": {
+            "type": "bool",
+            "name": "Debug Logging",
+            "description": "Prints detailed messages to the console about what the buffer is doing. Only useful for troubleshooting. Leave it off for normal play.",
+            "default": false
+        }
+    }
+}
